@@ -41,7 +41,7 @@ class SoShipController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // 
     }
 
     /**

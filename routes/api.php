@@ -20,8 +20,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('login', 'UserController@login');
 
-Route::prefix('soship')->middleware('jwt.verify')->group( function () {
-    Route::get('get-all-products', 'Api\Client\SoShipController@index');
-    Route::get('get-detail-product/{soship_code}', 'Api\Client\SoShipController@show');
-    Route::get('user', 'UserController@getUser');
+Route::middleware('jwt.verify')->group( function () {
+    Route::prefix('soship')->group( function () {
+        Route::get('get-all-products', 'Api\Client\SoShipController@index');
+        Route::get('get-detail-product/{soship_code}', 'Api\Client\SoShipController@show');
+    });
 });
