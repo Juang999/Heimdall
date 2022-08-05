@@ -25,4 +25,6 @@ Route::middleware('jwt.verify')->group( function () {
         Route::get('get-all-products', 'Api\Client\SoShipController@index');
         Route::get('get-detail-product/{soship_code}', 'Api\Client\SoShipController@show');
     });
+
+    Route::get('/profile', 'Api\Client\Profile');
 });
