@@ -3,6 +3,11 @@
 namespace App\Http\Controllers\Api\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cu;
+use App\Models\Dom;
+use App\Models\En;
+use App\Models\Si;
+use App\Models\So;
 use Illuminate\Http\Request;
 use App\Models\SoShipMaster;
 use App\Models\SoShipDDetail;
@@ -17,7 +22,15 @@ class SoShipController extends Controller
     public function index()
     {
         try {
-            $products = SoShipMaster::with('SoShipDDetail')->paginate(100);
+            $products = SoShipMaster::with(['SoShipDDetail'])->paginate(25);
+
+            foreach ($products as $product) {
+                $product['dom'] = Dom::where('dom_id', $product->soship_dom_id)->get();
+                $product['en'] = En::where('en_id', $product->soship_en_id)->get();
+                $product['so'] = So::where('so_oid', $product->soship_so_oid)->get();
+                $product['si'] = Si::where('si_id', $product->soship_si_id)->get();
+                $product['cu'] = Cu::where('cu_id', $product->soship_cu_id)->get();
+            }
 
             return response()->json([
                 'status' => 'success',
@@ -41,7 +54,7 @@ class SoShipController extends Controller
      */
     public function store(Request $request)
     {
-        // 
+        //
     }
 
     /**
@@ -54,6 +67,8 @@ class SoShipController extends Controller
     {
         try {
             $product = SoShipMaster::where('soship_code',$soship_code)->with('SoShipDDetail')->first();
+            $product['dom'] = Dom::where('dom_id', $product->soship_dom_id)->get();
+            $product['en'] = En::where('en_id', $product->soship_en_id)->get();
 
             return response()->json([
                 'status' => 'success',

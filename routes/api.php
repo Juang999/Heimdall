@@ -26,5 +26,11 @@ Route::middleware('jwt.verify')->group( function () {
         Route::get('get-detail-product/{soship_code}', 'Api\Client\SoShipController@show');
     });
 
+    // Single Route
+    Route::get('/en', 'Api\Client\En');
+    Route::get('/so', 'Api\Client\So');
+    Route::get('/si', 'Api\Client\Si');
+    Route::get('/cu', 'Api\Client\Cu');
+    Route::get('/dom', 'Api\Client\Dom');
     Route::get('/profile', 'Api\Client\Profile');
 });
