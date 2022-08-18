@@ -21,16 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('login', 'UserController@login');
 
 Route::middleware('jwt.verify')->group( function () {
-    Route::prefix('soship')->group( function () {
-        Route::get('get-all-products', 'Api\Client\SoShipController@index');
-        Route::get('get-detail-product/{soship_code}', 'Api\Client\SoShipController@show');
-    });
-
-    // Single Route
-    Route::get('/en', 'Api\Client\En');
-    Route::get('/so', 'Api\Client\So');
-    Route::get('/si', 'Api\Client\Si');
-    Route::get('/cu', 'Api\Client\Cu');
-    Route::get('/dom', 'Api\Client\Dom');
-    Route::get('/profile', 'Api\Client\Profile');
+    Route::apiResource('so', 'Api\Client\SoController')
+    ->parameters(['so' => 'so_code'])
+    ->only('index', 'show');
 });
