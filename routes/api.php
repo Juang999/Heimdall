@@ -24,4 +24,10 @@ Route::middleware('jwt.verify')->group( function () {
     Route::apiResource('so', 'Api\Client\SoController')
     ->parameters(['so' => 'so_code'])
     ->only('index', 'show');
+
+    Route::apiResource('soship', 'Api\Client\SoShipController')
+    ->parameters(['soship' => 'soship_code'])
+    ->only('index', 'show');
+
+    Route::get('/pt/{pt_code}', 'Api\Client\CheckProduct');
 });
