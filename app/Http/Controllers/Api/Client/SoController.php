@@ -8,6 +8,9 @@ use App\Models\DomMaster;
 use App\Models\En;
 use App\Models\EnMaster;
 use App\Models\PiMaster;
+use App\Models\PtMaster;
+use App\Models\PtnrMaster;
+use App\Models\SoDDetail;
 use Illuminate\Http\Request;
 use App\Models\SoMaster;
 
@@ -63,10 +66,16 @@ class SoController extends Controller
     public function show($so_code)
     {
         try {
-            $so_detail = SoMaster::where('so_code', $so_code)->with('SoDDetail')->first();
+            $so_detail = SoMaster::where('so_code', $so_code)->first();
             $so_detail->dom_master = DomMaster::where('dom_id', $so_detail->so_dom_id)->get();
+            $so_detail->ptnr_mstr = PtnrMaster::where('ptnr_id', $so_detail->so_ptnr_id_sold)->get();
             $so_detail->en_master = EnMaster::where('en_id', $so_detail->so_en_id)->get();
             $so_detail->pi_master = PiMaster::where('pi_id', $so_detail->so_pi_id)->get();
+            $so_detail->so_d_details = SoDDetail::where('sod_so_oid', $so_detail->so_oid)->get();
+
+            foreach ($so_detail->so_d_details as $detail) {
+                $detail->product = PtMaster::where('pt_id', $detail->sod_pt_id)->get();
+            }
 
             return response()->json([
                 'status' => 'success',
