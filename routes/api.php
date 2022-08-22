@@ -21,13 +21,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('login', 'UserController@login');
 
 Route::middleware('jwt.verify')->group( function () {
-    Route::apiResource('so', 'Api\Client\SoController')
-    ->parameters(['so' => 'so_code'])
-    ->only('index', 'show');
+    Route::prefix('so')->group( function () {
+        Route::get('/{so_code}', 'Api\Client\SoController@show');
+        Route::patch('/{sod_oid}', 'Api\Client\SoController@update');
+    });
 
-    Route::apiResource('soship', 'Api\Client\SoShipController')
-    ->parameters(['soship' => 'soship_code'])
-    ->only('index', 'show');
+    Route::prefix('user')->group( function () {
+        Route::get('profile', 'UserController@profile');
+    });
 
     Route::get('/pt/{pt_code}', 'Api\Client\CheckProduct');
 });
+
+Route::get('testing', 'Testing\TestingController@getTime');
