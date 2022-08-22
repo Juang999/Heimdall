@@ -17,4 +17,13 @@ class SoShipMaster extends Model
         return $this->hasMany(SoShipDDetail::class, 'soshipd_soship_oid');
     }
 
+    public function Dom()
+    {
+        return $this->belongsTo(Dom::class, 'dom_id');
+    }
+
+    // public function So()
+    // {
+    //     return $this->belongsTo(So::class, 'so_oid');
+    // }
 }
