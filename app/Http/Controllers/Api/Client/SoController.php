@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Client;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SoRequest;
 use App\Models\Dom;
 use App\Models\DomMaster;
 use App\Models\En;
@@ -13,6 +14,9 @@ use App\Models\PtnrMaster;
 use App\Models\SoDDetail;
 use Illuminate\Http\Request;
 use App\Models\SoMaster;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class SoController extends Controller
 {
@@ -98,9 +102,30 @@ class SoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(SoRequest $request, $sod_oid)
     {
-        //
+        try {
+            // dd(SoDDetail::where('sod_oid', $sod_oid)->first());
+            DB::beginTransaction();
+            SoDDetail::where('sod_oid', $sod_oid)->update([
+                'sod_upd_by' => Auth::user()->usernama,
+                'sod_upd_date' => Carbon::translateTimeString(now()),
+                'sod_qty_checked' => $request->sod_qty_checked
+            ]);
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success to update SO'
+            ], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'failed to update SO',
+                'error' => $th->getMessage()
+            ], 400);
+        }
     }
 
     /**
