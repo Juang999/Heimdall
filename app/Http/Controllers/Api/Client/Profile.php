@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\Client;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\TConfGroup;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 
 class Profile extends Controller
@@ -17,7 +19,7 @@ class Profile extends Controller
     public function __invoke()
     {
         try {
-            $user = Auth::user();
+            $user = User::where('userid', Auth::user()->userid)->with('TConfGroup')->first();
 
             return response()->json([
                 'status' => 'success',

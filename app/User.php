@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\TConfGroup;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -50,5 +51,10 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function TConfGroup()
+    {
+        return $this->belongsTo(TConfGroup::class, 'groupid');
     }
 }
