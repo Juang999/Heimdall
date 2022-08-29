@@ -28,6 +28,7 @@ Route::middleware('jwt.verify')->group( function () {
 
     Route::prefix('user')->group( function () {
         Route::get('profile', 'Api\Client\Profile');
+        // Route::get('history', 'Api\Client\')
     });
 
     Route::get('/pt/{pt_code}', 'Api\Client\CheckProduct');
