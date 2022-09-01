@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TConfGroup;
 use JWTAuth;
 use App\User;
 use Illuminate\Http\Request;
@@ -109,6 +110,7 @@ class UserController extends Controller
     {
         try {
             $user = Auth::user();
+            $user->group = TConfGroup::where('groupid', $user->groupid)->get();
 
             return response()->json([
                 'status' => 'success',
