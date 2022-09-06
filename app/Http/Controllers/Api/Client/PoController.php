@@ -71,7 +71,7 @@ class PoController extends Controller
             PoDDetail::where('pod_oid', $pod_oid)->update([
                 'pod_upd_by' => Auth::user()->uaernama,
                 'pod_upd_date' => Carbon::translateTimeString(now()),
-                
+
             ]);
 
             return response()->json([
