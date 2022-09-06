@@ -21,14 +21,13 @@ class History extends Controller
     {
         try {
             if (request()->start_date && request()->end_date) {
-                $histories = SoDDetail::wherre('sod_upd_by', Auth::user()->usernama)
-                ->whereBetween('sod_upd_date', [request()->start_date, request()->end_date])
-                ->orderBy('sod_upd_date', 'DESC')->paginate(10);
-
-                foreach ($histories as $history) {
-                    $history->product = PtMaster::where('pt_id', $history->sod_pt_id)->get();
-                    $history->so_master = SoMaster::where('so_oid', $history->sod_so_oid)->get();
-                }
+                $histories = SoMaster::whereIn('so_oid', function ($query) {
+                    $query->select('sod_so_oid')
+                        ->from('public.sod_det')
+                        ->where('sod_upd_by', Auth::user()->usernama)
+                        ->whereBetween('sod_upd_date', [request()->start_date, request()->end_date])
+                        ->distinct('sod_so_oid')->get();
+                })->with('SoDDetail')->limit(5);
 
                 return response()->json([
                     'status' => 'success',
@@ -37,18 +36,17 @@ class History extends Controller
                 ], 200);
             }
 
-            $histories = SoDDetail::where('sod_upd_by', Auth::user()->usernama)
-            ->orderBy('sod_upd_date', 'DESC')->paginate(10);
-
-            foreach ($histories as $history) {
-                $history->product = PtMaster::where('pt_id', $history->sod_pt_id)->get();
-                $history->so_master = SoMaster::where('so_oid', $history->sod_so_oid)->get();
-            }
+            $histories = SoMaster::whereIn('so_oid', function ($query) {
+                $query->select('sod_so_oid')
+                    ->from('public.sod_det')
+                    ->where('sod_upd_by', Auth::user()->usernama)
+                    ->distinct('sod_so_oid')->get();
+            })->with('SoDDetail')->limit(5);
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'success to get histories',
-                'histories' => $histories
+                'message' => 'success to get history',
+                'history' => $histories
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([
