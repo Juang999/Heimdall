@@ -47,7 +47,7 @@ class PoController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'success to get data Pre-Order',
-                'PO' => $po
+                'po_detail' => $po
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([
