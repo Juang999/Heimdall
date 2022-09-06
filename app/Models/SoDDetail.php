@@ -20,4 +20,9 @@ class SoDDetail extends Model
     {
         return $this->belongsTo(SoMaster::class, 'so_oid');
     }
+
+    public function PtMaster()
+    {
+        return $this->belongsTo(PtMaster::class, 'pt_id', 'sod_pt_id');
+    }
 }
