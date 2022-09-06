@@ -21,16 +21,24 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('login', 'UserController@login');
 
 Route::middleware('jwt.verify')->group( function () {
-    Route::prefix('so')->group( function () {
-        Route::get('/{so_code}', 'Api\Client\SoController@show');
-        Route::patch('/{sod_oid}', 'Api\Client\SoController@update');
-    });
-
+    // userEndPoint
     Route::prefix('user')->group( function () {
         Route::get('profile', 'Api\Client\Profile');
         Route::get('history', 'Api\Client\History');
     });
 
+    // salesOrderEndPoint
+    Route::prefix('so')->group( function () {
+        Route::get('/{so_code}', 'Api\Client\SoController@show');
+        Route::patch('/{sod_oid}', 'Api\Client\SoController@update');
+    });
+
+    // preOrderEndPoint
+    Route::prefix('po')->group( function () {
+        Route::get('/{po_code}', 'Api\Client\PoController@show');
+    });
+
+    Route::get('location', 'Api\Client\LocMaster');
     Route::get('/pt/{pt_code}', 'Api\Client\CheckProduct');
 });
 
