@@ -23,6 +23,6 @@ class SoDDetail extends Model
 
     public function PtMaster()
     {
-        return $this->belongsTo(PtMaster::class, 'pt_id', 'sod_pt_id');
+        return $this->belongsTo(PtMaster::class, 'sod_pt_id', 'pt_id');
     }
 }

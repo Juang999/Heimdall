@@ -14,7 +14,7 @@ class PtMaster extends Model
 
     public function SoDDetail()
     {
-        return $this->hasMany(SoDDetail::class, 'sod_pt_id', 'pt_id');
+        return $this->hasMany(SoDDetail::class, 'pt_id', 'sod_pt_id');
     }
 
     public function PoDDetail()
