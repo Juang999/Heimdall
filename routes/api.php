@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\Client as Api;
+use App\Http\Controllers\Api as Api;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,3 +45,4 @@ Route::middleware('jwt.verify')->group( function () {
 });
 
 Route::get('testing', 'Testing\TestingController@getTime');
+Route::post('/invc', [Api\Historical\HistoricalController::class, 'invc']);

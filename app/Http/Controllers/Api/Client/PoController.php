@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Http\Controllers\Api\Historical\HistoricalController;
 
 class PoController extends Controller
 {
@@ -44,6 +45,10 @@ class PoController extends Controller
                 'po_add_by' => Auth::user()->usernama,
                 'po_rmks' => $request->inventory_code
             ]);
+
+            foreach ($request->details as $detail) {
+
+            }
 
             DB::commit();
 
