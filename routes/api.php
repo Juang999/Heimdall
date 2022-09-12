@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\Client as Api;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,7 @@ Route::middleware('jwt.verify')->group( function () {
 
     // preOrderEndPoint
     Route::prefix('po')->group( function () {
+        Route::post('/createIR', [Api\PoController::class, 'store']);
         Route::get('/{po_code}', 'Api\Client\PoController@show');
     });
 
