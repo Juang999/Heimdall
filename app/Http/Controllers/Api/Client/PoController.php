@@ -46,8 +46,27 @@ class PoController extends Controller
                 'po_rmks' => $request->inventory_code
             ]);
 
-            foreach ($request->details as $detail) {
+            $number = 0;
 
+            foreach ($request->details as $detail) {
+                PoDDetail::create([
+                    'pod_oid' => Str::uuid(),
+                    'pod_dom_id' => 1,
+                    'pod_add_by' => Auth::user()->usernama,
+                    'pod_add_date' => Carbon::translateTimeString(now()),
+                    'pod_po_oid' => $inventoryReceive->po_oid,
+                    'pod_seq' => $number,
+                    'pod_si_id' => 992,
+                    'pod_pt_id' => $detail->pt_id,
+                    'pod_qty' => $detail->qty,
+                    'pod_qty_receive' => $detail->qty_receive,
+                    'pod_cost' => $detail->cost,
+                    'pod_disc' => 0,
+                    'pod_sb_id' => 0,
+                    'pod_cc_id' => 0,
+                    'pod_pjr_id' => 0,
+
+                ]);
             }
 
             DB::commit();

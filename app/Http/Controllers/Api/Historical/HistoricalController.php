@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Historical;
 
 use App\Http\Controllers\Controller;
 use App\Models\INVC;
+use App\Models\INVH;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -38,11 +39,24 @@ class HistoricalController extends Controller
                     'invc_qty_old' => $oldData->invc_qty
                 ]);
             }
-
-
+        } catch (\Throwable $th) {
             return response()->json([
-                'status' => 'success',
-            ], 200);
+                'status' => 'failed',
+                'message' => 'failed to update or create data',
+                'error' => $th->getMessage()
+            ], 400);
+        }
+    }
+
+    public function invh(Request $request)
+    {
+        try {
+            INVH::create([
+                'invh_oid' => Str::uuid(),
+                'invh_dom_id' => 1,
+                'invh_en_id' => $request->en_id,
+                // ''
+            ]);
         } catch (\Throwable $th) {
             //throw $th;
         }

@@ -10,5 +10,5 @@ class INVH extends Model
 
     protected $keyType = 'uuid';
 
-    protected $primaryKey = '';
+    protected $primaryKey = 'invh_oid';
 }
