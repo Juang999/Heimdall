@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Api\Client;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\InventoryReceiveRequest;
 use App\Http\Requests\PORequest;
 use App\Models\PoDDetail;
 use App\Models\PoMaster;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class PoController extends Controller
 {
@@ -28,9 +31,35 @@ class PoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(InventoryReceiveRequest $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $inventoryReceive = PoMaster::create([
+                'po_oid' => Str::uuid(),
+                'po_dom_id' => 1,
+                'po_en_id' => 1,
+                'po_add_date' => Carbon::translateTimeString(now()),
+                'po_add_by' => Auth::user()->usernama,
+                'po_rmks' => $request->inventory_code
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success to create Inventory Receive data',
+                'data' => $inventoryReceive
+            ], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'failed to create data',
+                'error' => $th->getMessage()
+            ], 400);
+        }
     }
 
     /**
