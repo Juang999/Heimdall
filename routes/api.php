@@ -35,12 +35,20 @@ Route::middleware('jwt.verify')->group( function () {
     });
 
     // preOrderEndPoint
-    Route::prefix('po')->group( function () {
-        Route::post('/createIR', [Api\PoController::class, 'store']);
-        Route::get('/{po_code}', 'Api\Client\PoController@show');
-    });
+    // Route::prefix('po')->group( function () {
+    //     Route::post('/createIR', [Api\PoController::class, 'store']);
+    //     Route::get('/{po_code}', 'Api\Client\PoController@show');
+    // });
 
-    Route::get('location', 'Api\Client\LocMaster');
+    // inventoryReceiptEndPoint
+    Route::post('/ir', 'Api\Client\InventoryReceipt');
+
+    // masterDataEndpoint
+    Route::get('location', 'Api\Client\MasterDataController@getLocation');
+    Route::get('partner', 'Api\Client\MasterDataController@getPartner');
+    Route::get('site', 'Api\Client\MasterDataController@getSite');
+
+    // checkProductEndPoint
     Route::get('/pt/{pt_code}', 'Api\Client\CheckProduct');
 });
 
