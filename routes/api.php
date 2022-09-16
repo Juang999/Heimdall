@@ -35,10 +35,10 @@ Route::middleware('jwt.verify')->group( function () {
     });
 
     // preOrderEndPoint
-    // Route::prefix('po')->group( function () {
-    //     Route::post('/createIR', [Api\PoController::class, 'store']);
-    //     Route::get('/{po_code}', 'Api\Client\PoController@show');
-    // });
+    Route::prefix('po')->group( function () {
+        // Route::post('/', 'Api\Client\PoController@store');
+        Route::get('/{po_code}', 'Api\Client\PoController@show');
+    });
 
     // inventoryReceiptEndPoint
     Route::post('/ir', 'Api\Client\InventoryReceipt');
