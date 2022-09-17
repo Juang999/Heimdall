@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class INVC extends Model
+class InvcMaster extends Model
 {
     protected $table = 'public.invc_mstr';
 
-    protected $keyType = 'uuid';
+    protected $keyType = 'string';
 
     protected $primaryKey = 'invc_oid';
 

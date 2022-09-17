@@ -4,11 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class INVH extends Model
+class InvhMaster extends Model
 {
     protected $table = 'public.invh_mstr';
 
-    protected $keyType = 'uuid';
+    protected $keyType = 'string';
 
     protected $primaryKey = 'invh_oid';
+
+    protected $guarded = [];
+
+    public $timestamps = false;
 }
