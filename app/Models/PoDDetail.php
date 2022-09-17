@@ -12,6 +12,10 @@ class PoDDetail extends Model
 
     protected $primaryKey = 'pod_oid';
 
+    protected $guarded = [];
+
+    public $timestamps = false;
+
     public function PoMaster()
     {
         return $this->belongsTo(PoMaster::class, 'po_oid');
