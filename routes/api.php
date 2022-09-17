@@ -47,9 +47,14 @@ Route::middleware('jwt.verify')->group( function () {
     Route::get('location', 'Api\Client\MasterDataController@getLocation');
     Route::get('partner', 'Api\Client\MasterDataController@getPartner');
     Route::get('site', 'Api\Client\MasterDataController@getSite');
+    Route::get('entity', 'Api\Client\MasterDataController@getEntity');
+    Route::get('account', 'Api\Client\MasterDataController@getAccount');
 
     // checkProductEndPoint
     Route::get('/pt/{pt_code}', 'Api\Client\CheckProduct');
+
+    // searchProductEndPoint
+    Route::post('/searchProduct', 'Api\Client\SearchProduct');
 });
 
 Route::get('testing', 'Testing\TestingController@getTime');
