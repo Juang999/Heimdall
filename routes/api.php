@@ -29,29 +29,33 @@ Route::middleware('jwt.verify')->group( function () {
     });
 
     // salesOrderEndPoint
-    Route::prefix('so')->group( function () {
-        Route::get('/{so_code}', 'Api\Client\SoController@show');
+    Route::prefix('SO')->group( function () {
         Route::patch('/{sod_oid}', 'Api\Client\SoController@update');
+        Route::get('/{so_code}', 'Api\Client\SoController@show');
+        Route::get('/', 'Api\Client\SoController@history');
     });
 
     // preOrderEndPoint
-    Route::prefix('po')->group( function () {
-        // Route::post('/', 'Api\Client\PoController@store');
+    Route::prefix('PO')->group( function () {
+        Route::patch('/{pod_oid}', 'Api\Client\PoController@update');
         Route::get('/{po_code}', 'Api\Client\PoController@show');
+        Route::get('/', 'Api\Client\PoController@history');
     });
 
     // inventoryReceiptEndPoint
-    Route::post('/ir', 'Api\Client\InventoryReceipt');
+    Route::prefix('IR')->group( function () {
+        Route::post('/', 'Api\Client\IrController@store');
+    });
 
     // masterDataEndpoint
     Route::get('location', 'Api\Client\MasterDataController@getLocation');
-    Route::get('partner', 'Api\Client\MasterDataController@getPartner');
-    Route::get('site', 'Api\Client\MasterDataController@getSite');
-    Route::get('entity', 'Api\Client\MasterDataController@getEntity');
     Route::get('account', 'Api\Client\MasterDataController@getAccount');
+    Route::get('partner', 'Api\Client\MasterDataController@getPartner');
+    Route::get('entity', 'Api\Client\MasterDataController@getEntity');
+    Route::get('site', 'Api\Client\MasterDataController@getSite');
 
     // checkProductEndPoint
-    Route::get('/pt/{pt_code}', 'Api\Client\CheckProduct');
+    Route::get('/pt/{pt_syslog_code}', 'Api\Client\CheckProduct');
 
     // searchProductEndPoint
     Route::post('/searchProduct', 'Api\Client\SearchProduct');
