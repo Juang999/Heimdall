@@ -24,7 +24,8 @@ class PoRequest extends FormRequest
     public function rules()
     {
         return [
-            'remarks' => 'required'
+            'qtyReceive' => 'required',
+            'locId' => 'required'
         ];
     }
 }

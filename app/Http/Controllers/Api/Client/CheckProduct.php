@@ -15,10 +15,17 @@ class CheckProduct extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function __invoke($pt_code)
+    public function __invoke($pt_syslog_code)
     {
         try {
-            $product = PtMaster::where('pt_code', $pt_code)->first();
+            $product = PtMaster::where('pt_syslog_code', $pt_syslog_code)->first();
+
+            if (!$product) {
+                return response()->json([
+                    'status' => 'not found',
+                    'message' => 'product not found'
+                ], 404);
+            }
 
             $cost = InvctTable::where([
                 ['invct_pt_id', '=', $product->pt_id],
