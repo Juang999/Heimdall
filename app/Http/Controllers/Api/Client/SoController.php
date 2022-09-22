@@ -20,57 +20,15 @@ use Illuminate\Support\Facades\DB;
 
 class SoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        try {
-            $so_masters = SoMaster::with('SoDDetail')->paginate(25);
-
-            foreach ($so_masters as $so_master) {
-                $so_master->dom_master = DomMaster::where('dom_id', $so_master->so_dom_id)->get();
-                $so_master->en_master = EnMaster::where('en_id', $so_master->so_en_id)->get();
-                $so_master->pi_master = PiMaster::where('pi_id', $so_master->so_pi_id)->get();
-            }
-
-            return response()->json([
-                'status' => 'success',
-                'message' => 'success to get so_master data',
-                'so_master' => $so_masters
-            ], 200);
-        } catch (\Throwable $th) {
-            return response()->json([
-                'status' => 'failed',
-                'message' => 'failed to et so_master data',
-                'error' => $th->getMessage()
-            ], 400);
-        }
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($so_code)
     {
         try {
-        $so_detail = SoMaster::where('so_code', $so_code)->with('SoDDetail.PtMaster')->first();
+        $so_detail = SoMaster::where('so_code', $so_code)->with('SoDDetail.PtMaster')->first([
+            'so_oid',
+            'so_add_by',
+            'so_add_date',
+            'so_code'
+        ]);
 
             return response()->json([
                 'status' => 'success',
@@ -86,17 +44,10 @@ class SoController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(SoRequest $request, $sod_oid)
     {
         try {
-            // dd(SoDDetail::where('sod_oid', $sod_oid)->first());
+            // dd($request->all());
             DB::beginTransaction();
             SoDDetail::where('sod_oid', $sod_oid)->update([
                 'sod_upd_by' => Auth::user()->usernama,
@@ -107,7 +58,8 @@ class SoController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'success to update SO'
+                'message' => 'success to update SO',
+                'data' => SoDDetail::where('sod_oid', $sod_oid)->first()
             ], 200);
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -119,14 +71,28 @@ class SoController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function history()
     {
-        //
+        try {
+            $data = SoMaster::whereIn('so_oid', function ($query) {
+                $query->select('sod_so_oid')
+                    ->from('public.sod_det')
+                    ->where('sod_upd_by', Auth::user()->usernama)
+                    ->distinct('sod_so_oid')
+                    ->get();
+            })->limit(5)->get(['so_oid', 'so_add_by', 'so_add_date', 'so_code']);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success to get history',
+                'data' => $data
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'failed to get history',
+                'error' => $th->getMessage()
+            ], 400);
+        }
     }
 }

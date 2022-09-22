@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Api\Historical\HistoricalController;
+use App\Models\RiumMaster;
 
 class InventoryReceipt extends Controller
 {
@@ -24,45 +25,55 @@ class InventoryReceipt extends Controller
     public function __invoke(Request $request)
     {
         try {
+
+            $startDate = Carbon::now()->startOfMonth()->format('Y-m-d');
+
+            $lastDate = Carbon::now()->lastOfMonth()->format('Y-m-d');
+
+            $data = RiumMaster::whereBetween('rium_add_date', [$startDate, $lastDate])->count();
+
+            $increment = "0000";
+
+            if (!$data) {
+                $increment += 1;
+            }
+
+            dd($increment);
+
             DB::beginTransaction();
-                $poMaster = PoMaster::create([
-                    'po_oid' => Str::uuid(),
-                    'po_dom_id' => 1,
-                    'po_en_id' => 1,
-                    'po_add_date' => Carbon::translateTimeString(now()),
-                    'po_add_by' => Auth::user()->usernama,
-                    'po_date' => Carbon::translateTimeString(now()),
-                    'po_rmks' => $request->remarks,
-                    'po_sb_id' => 0,
-                    'po_cc_id' => 0,
-                    'po_si_id' => 992,
-                    'po_pjc_id' => 991,
-                    'po_total' => $request->total,
-                    'po_tran_id' => 19,
-                    'po_trans_id' => 'I',
-                    'po_credit_term' => $request->creditTerm,
+                $riumMaster = RiumMaster::create([
+                    'rium_oid' => Str::uuid(),
+                    'rium_dom_id' => 1,
+                    'rium_en_id' => 1,
+                    'rium_add_date' => Carbon::translateTimeString(now()),
+                    'rium_add_by' => Auth::user()->usernama,
+                    'rium_date' => Carbon::translateTimeString(now()),
+                    // 'rium_type2' =>
+                    'rium_rmks' => $request->remarks,
+                    'rium_sb_id' => 0,
+                    'rium_cc_id' => 0,
+                    'rium_si_id' => 992,
+                    'rium_pjc_id' => 991,
+                    'rium_total' => $request->total,
+                    'rium_tran_id' => 19,
+                    'rium_trans_id' => 'I',
+                    'rium_credit_term' => $request->creditTerm,
                 ]);
 
                 foreach ($request->details as $detail) {
                     $partnumber = PtMaster::where('pt_code', $request->ptCode)->first();
 
-                    $poMaster->detail = PoDDetail::create([
+                    $riumMaster->detail = PoDDetail::create([
                         'pod_oid' => Str::uuid(),
                         'pod_dom_id' => 1,
                         'pod_add_by' => Auth::user()->usernama,
                         'pod_add_date' => Carbon::translateTimeString(now()),
-                        'pod_po_oid' => $poMaster->po_oid,
+                        'pod_po_oid' => $riumMaster->po_oid,
                         'po_si_id' => 992,
                         'pod_pt_id' => $partnumber->pt_id,
                         'pod_qty_receive' => $request->qtyReceive,
                         'pod_loc_id' => $request->locId
                     ]);
-
-                    $historical = new HistoricalController();
-
-                    $historical->invc($partnumber->pt_id, $request->locId, $request->qtyReceive);
-                    $historical->invh($partnumber->pt_id, $request->locId);
-                    $historical->glt($partnumber->pt_id, $request->credit);
                 }
 
             DB::commit();
@@ -70,7 +81,7 @@ class InventoryReceipt extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'success to create Inventory Receive data',
-                'data' => $poMaster
+                'data' => $riumMaster
             ], 200);
         } catch (\Throwable $th) {
             DB::rollBack();
