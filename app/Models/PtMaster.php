@@ -21,4 +21,9 @@ class PtMaster extends Model
     {
         return $this->hasMany(PoDDetail::class, 'pt_id', 'pod_pt_id');
     }
+
+    public function RiumDDetail()
+    {
+        return $this->hasMany(RiumDDetail::class, 'pt_id', 'riumd_pt_id');
+    }
 }

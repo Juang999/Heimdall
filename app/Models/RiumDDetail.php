@@ -15,4 +15,14 @@ class RiumDDetail extends Model
     protected $guarded = [];
 
     public $timestamps = false;
+
+    public function RiumMaster()
+    {
+        return $this->belongsTo(RiumMaster::class, 'rium_oid', 'riumd_rium_oid');
+    }
+
+    public function PtMaster()
+    {
+        return $this->belongsTo(PtMaster::class, 'riumd_pt_id', 'pt_id');
+    }
 }
