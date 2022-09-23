@@ -41,6 +41,7 @@ class IrController extends Controller
                     'rium_dom_id' => 1,
                     'rium_en_id' => $request->enId,
                     'rium_add_by' => Auth::user()->usernama,
+                    'rium_add_date' => Carbon::translateTimeString(now()),
                     'rium_type2' => "IRM0".$request->enId.Carbon::now()->format('ym')."00001".$data,
                     'rium_date' => Carbon::now()->format('Y-m-d'),
                     // 'rium_type' => "IRM",
@@ -84,6 +85,26 @@ class IrController extends Controller
                 'message' => 'failed to post data',
                 'error' => $th->getMessage(),
                 'line' => $th->getLine()
+            ], 400);
+        }
+    }
+
+    public function history()
+    {
+        try {
+            $data = RiumMaster::where('rium_add_by', Auth::user()->usernama)->with('RiumDDetail.PtMaster')->get();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success to get history Inventory Receive',
+                'data' => $data
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'failed to get history Inventory Receive',
+                'error' => $th->getMessage(),
+                'errorLine' => $th->getLine()
             ], 400);
         }
     }
