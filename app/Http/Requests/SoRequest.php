@@ -24,7 +24,7 @@ class SoRequest extends FormRequest
     public function rules()
     {
         return [
-            "sod_qty_checked" => 'required'
+            "products" => 'required'
         ];
     }
 }

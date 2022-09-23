@@ -24,8 +24,7 @@ class PORequest extends FormRequest
     public function rules()
     {
         return [
-            'pod_qty_receive' => 'required',
-            'pod_loc_id' => 'required'
+            'products' => 'required',
         ];
     }
 }

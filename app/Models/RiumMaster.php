@@ -15,4 +15,9 @@ class RiumMaster extends Model
     protected $guarded = [];
 
     public $timestamps = false;
+
+    public function RiumDDetail()
+    {
+        return $this->hasMany(RiumDDetail::class, 'riumd_rium_oid', 'rium_oid');
+    }
 }

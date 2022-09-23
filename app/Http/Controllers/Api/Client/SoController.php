@@ -44,29 +44,32 @@ class SoController extends Controller
         }
     }
 
-    public function update(SoRequest $request, $sod_oid)
+    public function update(SoRequest $request)
     {
         try {
-            // dd($request->all());
             DB::beginTransaction();
-            SoDDetail::where('sod_oid', $sod_oid)->update([
-                'sod_upd_by' => Auth::user()->usernama,
-                'sod_upd_date' => Carbon::translateTimeString(now()),
-                'sod_qty_checked' => $request->sod_qty_checked
-            ]);
+            $products = json_decode($request->products, true);
+
+            foreach ($products as $product) {
+                SoDDetail::where('sod_oid', $product['sod_oid'])->update([
+                    'sod_upd_by' => Auth::user()->usernama,
+                    'sod_upd_date' => Carbon::translateTimeString(now()),
+                    'sod_qty_checked' => $product["qtyChecked"]
+                ]);
+            }
             DB::commit();
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'success to update SO',
-                'data' => SoDDetail::where('sod_oid', $sod_oid)->first()
             ], 200);
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
                 'status' => 'failed',
                 'message' => 'failed to update SO',
-                'error' => $th->getMessage()
+                'error' => $th->getMessage(),
+                'line' => $th->getLine()
             ], 400);
         }
     }

@@ -30,21 +30,22 @@ Route::middleware('jwt.verify')->group( function () {
 
     // salesOrderEndPoint
     Route::prefix('SO')->group( function () {
-        Route::patch('/{sod_oid}', 'Api\Client\SoController@update');
         Route::get('/{so_code}', 'Api\Client\SoController@show');
+        Route::patch('/', 'Api\Client\SoController@update');
         Route::get('/', 'Api\Client\SoController@history');
     });
 
     // preOrderEndPoint
     Route::prefix('PO')->group( function () {
-        Route::patch('/{pod_oid}', 'Api\Client\PoController@update');
         Route::get('/{po_code}', 'Api\Client\PoController@show');
+        Route::patch('/', 'Api\Client\PoController@update');
         Route::get('/', 'Api\Client\PoController@history');
     });
 
     // inventoryReceiptEndPoint
     Route::prefix('IR')->group( function () {
         Route::post('/', 'Api\Client\IrController@store');
+        Route::get('/', 'Api\Client\IrController@history');
     });
 
     // masterDataEndpoint

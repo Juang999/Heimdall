@@ -38,19 +38,20 @@ class PoController extends Controller
     public function update(PoRequest $request, $pod_oid)
     {
         try {
-            PoDDetail::where('pod_oid', $pod_oid)->update([
-                'pod_upd_by' => Auth::user()->usernama,
-                'pod_upd_date' => Carbon::translateTimeString(now()),
-                'pod_qty_receive' => $request->qtyReceive,
-                'pod_loc_id' => $request->locId
-            ]);
+            $products = json_decode($request->products);
 
-            $data = PoDDetail::where('pod_oid', $pod_oid)->with('PtMaster')->first();
+            foreach ($products as $product) {
+                PoDDetail::where('pod_oid', $product["pod_oid"])->update([
+                    'pod_upd_by' => Auth::user()->usernama,
+                    'pod_upd_date' => Carbon::translateTimeString(now()),
+                    'pod_qty_receive' => $product["qtyReceive"],
+                    'pod_loc_id' => $product["locId"]
+                ]);
+            }
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'success to check transaction',
-                'data' => $data
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([
