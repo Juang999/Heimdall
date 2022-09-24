@@ -8,6 +8,7 @@ use App\Models\PoDDetail;
 use App\Http\Requests\PoRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PoController extends Controller
 {
@@ -35,10 +36,11 @@ class PoController extends Controller
         }
     }
 
-    public function update(PoRequest $request, $pod_oid)
+    public function update(PoRequest $request)
     {
         try {
-            $products = json_decode($request->products);
+            DB::beginTransaction();
+            $products = json_decode($request->products, true);
 
             foreach ($products as $product) {
                 PoDDetail::where('pod_oid', $product["pod_oid"])->update([
@@ -49,11 +51,13 @@ class PoController extends Controller
                 ]);
             }
 
+            DB::commit();
             return response()->json([
                 'status' => 'success',
                 'message' => 'success to check transaction',
             ], 200);
         } catch (\Throwable $th) {
+            DB::rollBack();
             return response()->json([
                 'status' => 'failed',
                 'message' => 'failed to get check transaction',
