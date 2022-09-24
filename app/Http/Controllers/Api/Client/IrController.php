@@ -27,8 +27,9 @@ class IrController extends Controller
                 if (!$rawData) {
                     $rawData = 1;
                 } else {
-                    $rawData + 1;
+                    $rawData++;
                 }
+                
                 $base = "0000";
 
                 $func = array_slice(str_split($base), 0, -strlen($rawData));

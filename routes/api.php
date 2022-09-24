@@ -61,6 +61,3 @@ Route::middleware('jwt.verify')->group( function () {
     // searchProductEndPoint
     Route::post('/searchProduct', 'Api\Client\SearchProduct');
 });
-
-Route::get('testing', 'Testing\TestingController@getTime');
-Route::post('/invc', [Api\Historical\HistoricalController::class, 'invc']);
