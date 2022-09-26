@@ -57,6 +57,7 @@ Route::middleware('jwt.verify')->group( function () {
 
     // checkProductEndPoint
     Route::get('/pt/{pt_syslog_code}', 'Api\Client\CheckProduct');
+    Route::get('/ptCheck/{pt_code}', 'Api\Client\CheckProductWithPoCode');
 
     // searchProductEndPoint
     Route::post('/searchProduct', 'Api\Client\SearchProduct');
