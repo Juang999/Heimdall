@@ -46,6 +46,7 @@ Route::middleware('jwt.verify')->group( function () {
     Route::prefix('IR')->group( function () {
         Route::post('/', 'Api\Client\IrController@store');
         Route::get('/', 'Api\Client\IrController@history');
+        Route::put('/{riumd_oid}', 'Api\Client\IrController@update');
     });
 
     // masterDataEndpoint
