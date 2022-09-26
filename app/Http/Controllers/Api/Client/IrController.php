@@ -29,7 +29,7 @@ class IrController extends Controller
                 } else {
                     $rawData++;
                 }
-                
+
                 $base = "0000";
 
                 $func = array_slice(str_split($base), 0, -strlen($rawData));
@@ -45,7 +45,7 @@ class IrController extends Controller
                     'rium_add_date' => Carbon::translateTimeString(now()),
                     'rium_type2' => "IRM0".$request->enId.Carbon::now()->format('ym')."00001".$data,
                     'rium_date' => Carbon::now()->format('Y-m-d'),
-                    // 'rium_type' => "IRM",
+                    'rium_type' => "R",
                     'rium_remarks' => $request->remarks,
                     // 'rium_dt' => Carbon::now()->format('Y-m-d')
                 ]);
@@ -60,11 +60,11 @@ class IrController extends Controller
                         'riumd_qty' => $value["qty"],
                         'riumd_um' => $value["um"],
                         'riumd_um_conv' => 1,
-                        'riumd_qty_real' => $value["qty"],
+                        'riumd_qty_real' => $value["qty"] / 1,
                         'riumd_si_id' => 992,
-                        'riumd_loc_id' => $request["locId"],
-                        'riumd_cost' => $request["cost"],
-                        'riumd_ac_id' => $request["acId"],
+                        'riumd_loc_id' => $value["locId"],
+                        'riumd_cost' => $value["cost"],
+                        'riumd_ac_id' => $value["acId"],
                         'riumd_sb_id' => 0,
                         'riumd_cc_id' => 0,
                         'riumd_dt' => Carbon::now()->format('Y-m-d'),
