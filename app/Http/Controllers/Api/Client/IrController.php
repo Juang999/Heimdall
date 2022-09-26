@@ -35,8 +35,6 @@ class IrController extends Controller
                 $func = array_slice(str_split($base), 0, -strlen($rawData));
                 $data = implode($func).$rawData;
 
-            // dd("IRM0".$request->enId.Carbon::now()->format('ym')."00001".$data);
-
             $riumMaster = RiumMaster::create([
                     'rium_oid' => Str::uuid(),
                     'rium_dom_id' => 1,
@@ -51,7 +49,7 @@ class IrController extends Controller
                 ]);
 
                 $values = json_decode($request->products, true);
-                // dd(json_encode($values));
+
                 foreach($values as $value) {
                     RiumDDetail::create([
                         'riumd_oid' => Str::uuid(),
@@ -87,6 +85,35 @@ class IrController extends Controller
                 'error' => $th->getMessage(),
                 'line' => $th->getLine()
             ], 400);
+        }
+    }
+
+    public function update(Request $request, $riumd_oid)
+    {
+        try {
+            RiumDDetail::where('riumd_oid', $riumd_oid)->update([
+                'riumd_pt_id' => $request->ptId,
+                'riumd_qty' => $request->qty,
+                'riumd_um' => $request->um,
+                'riumd_um_conv' => 1,
+                'riumd_qty_real' => $request->qty / 1,
+                'riumd_loc_id' => $request->locId,
+                'riumd_cost' => $request->cost,
+                'riumd_ac_id' => $request->acId,
+                'riumd_cost_total' => $request->costTotal
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success to update data'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'failed to update data',
+                'error' => $th->getMessage(),
+                'line' => $th->getLine()
+            ]);
         }
     }
 
