@@ -43,7 +43,7 @@ class IrController extends Controller
                     'rium_add_date' => Carbon::translateTimeString(now()),
                     'rium_type2' => "IRM0".$request->enId.Carbon::now()->format('ym')."00001".$data,
                     'rium_date' => Carbon::now()->format('Y-m-d'),
-                    'rium_type' => "R",
+                    'rium_type' => $request->type,
                     'rium_remarks' => $request->remarks,
                     // 'rium_dt' => Carbon::now()->format('Y-m-d')
                 ]);
