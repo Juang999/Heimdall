@@ -25,7 +25,6 @@ Route::middleware('jwt.verify')->group( function () {
     // userEndPoint
     Route::prefix('user')->group( function () {
         Route::get('profile', 'Api\Client\Profile');
-        Route::get('history', 'Api\Client\History');
     });
 
     // salesOrderEndPoint
@@ -47,6 +46,7 @@ Route::middleware('jwt.verify')->group( function () {
         Route::post('/', 'Api\Client\IrController@store');
         Route::get('/', 'Api\Client\IrController@history');
         Route::put('/{riumd_oid}', 'Api\Client\IrController@update');
+        Route::patch('/{rium_oid}', 'Api\Client\IrController@updateType');
     });
 
     // masterDataEndpoint
