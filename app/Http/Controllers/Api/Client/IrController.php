@@ -141,6 +141,8 @@ class IrController extends Controller
     {
         try {
             RiumMaster::where('rium_oid', $rium_oid)->update([
+                'rium_upd_by' => Auth::user()->usernama,
+                'rium_upd_date' => Carbon::now()->format('Y-m-d'),
                 'rium_type' => $request->type
             ]);
 
