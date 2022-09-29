@@ -136,4 +136,26 @@ class IrController extends Controller
             ], 400);
         }
     }
+
+    public function updateType(Request $request, $rium_oid)
+    {
+        try {
+            RiumMaster::where('rium_oid', $rium_oid)->update([
+                'rium_type' => $request->type
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success to update type'
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'failed to update type',
+                'error' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ], 400);
+        }
+    }
 }
