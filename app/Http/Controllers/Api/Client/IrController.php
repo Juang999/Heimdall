@@ -45,7 +45,7 @@ class IrController extends Controller
                     'rium_date' => Carbon::now()->format('Y-m-d'),
                     'rium_type' => $request->type,
                     'rium_remarks' => $request->remarks,
-                    // 'rium_dt' => Carbon::now()->format('Y-m-d')
+                    'rium_pack_vend' => $request->vendorCode
                 ]);
 
                 $values = json_decode($request->products, true);
