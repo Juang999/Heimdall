@@ -15,10 +15,11 @@ class CheckProduct extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function __invoke($pt_syslog_code)
+    public function __invoke($code)
     {
         try {
-            $product = PtMaster::where('pt_syslog_code', $pt_syslog_code)->first();
+            $product = PtMaster::where('pt_syslog_code', $code)
+                                ->orWhere('pt_code', $code)->first();
 
             if (!$product) {
                 return response()->json([

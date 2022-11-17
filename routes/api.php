@@ -57,8 +57,7 @@ Route::middleware('jwt.verify')->group( function () {
     Route::get('site', 'Api\Client\MasterDataController@getSite');
 
     // checkProductEndPoint
-    Route::get('/pt/{pt_syslog_code}', 'Api\Client\CheckProduct');
-    Route::get('/ptCheck/{pt_code}', 'Api\Client\CheckProductWithPoCode');
+    Route::get('/pt/{code}', 'Api\Client\CheckProduct');
 
     // searchProductEndPoint
     Route::post('/searchProduct', 'Api\Client\SearchProduct');

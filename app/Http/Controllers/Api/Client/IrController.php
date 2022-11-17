@@ -18,8 +18,6 @@ class IrController extends Controller
         try {
             DB::beginTransaction();
 
-            // dd($request->all());
-
                 $rawData = RiumMaster::whereBetween('rium_add_date', [
                     Carbon::now()->firstOfMonth()->format('Y-m-d'), Carbon::now()->lastOfMonth()->format('Y-m-d')
                 ])->count();
@@ -142,7 +140,7 @@ class IrController extends Controller
         try {
             RiumMaster::where('rium_oid', $rium_oid)->update([
                 'rium_upd_by' => Auth::user()->usernama,
-                'rium_upd_date' => Carbon::now()->format('Y-m-d'),
+                'rium_upd_date' => Carbon::translateTimeString(now()),
                 'rium_type' => $request->type
             ]);
 
