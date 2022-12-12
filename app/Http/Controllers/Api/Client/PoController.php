@@ -90,4 +90,35 @@ class PoController extends Controller
             ], 400);
         }
     }
+
+    public function toDay()
+    {
+        try {
+            $data = PoMaster::where('po_date', Carbon::now()->format('Y-m-d'))
+                            ->whereIn('po_oid', function ($query) {
+                                $query->select('pod_po_oid')
+                                    ->from('public.pod_det')
+                                    ->where([
+                                        ['pod_upd_by', '=', NULL],
+                                        ['pod_upd_date', '=', NULL],
+                                        ['pod_qty_receive', '=', NULL]
+                                    ])
+                                    ->distinct('pod_po_oid')
+                                    ->get();
+                            })
+                            ->paginate(25, ['po_code', 'po_date']);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success to get data today',
+                'data' => $data
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'failed to get data today',
+                'error' => $th->getMessage()
+            ], 400);
+        }
+    }
 }

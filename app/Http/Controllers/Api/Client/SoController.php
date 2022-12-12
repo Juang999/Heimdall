@@ -2,21 +2,13 @@
 
 namespace App\Http\Controllers\Api\Client;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\SoRequest;
-use App\Models\Dom;
-use App\Models\DomMaster;
-use App\Models\En;
-use App\Models\EnMaster;
-use App\Models\PiMaster;
-use App\Models\PtMaster;
-use App\Models\PtnrMaster;
-use App\Models\SoDDetail;
-use Illuminate\Http\Request;
-use App\Models\SoMaster;
-use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use App\Http\Requests\SoRequest;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Models\{SoMaster, SoDDetail};
 
 class SoController extends Controller
 {
@@ -95,6 +87,38 @@ class SoController extends Controller
                 'status' => 'failed',
                 'message' => 'failed to get history',
                 'error' => $th->getMessage()
+            ], 400);
+        }
+    }
+
+    public function toDay()
+    {
+        try {
+            $data = SoMaster::where('so_date', Carbon::now()->format('Y-m-d'))
+                            ->whereIn('so_oid', function ($query) {
+                                $query->select('sod_so_oid')
+                                    ->from('public.sod_det')
+                                    ->where([
+                                        ['sod_upd_by', '=', NULL],
+                                        ['sod_upd_date', '=', NULL],
+                                        ['sod_qty_checked', '=', NULL]
+                                    ])
+                                    ->distinct('sod_so_oid')
+                                    ->get();
+                            })
+                            ->orderBy('so_add_date', 'ASC')
+                            ->paginate(25, ['so_code', 'so_date']);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success to get data',
+                'data' => $data
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'failed to get data',
+                'error' => $th->getMessage(),
             ], 400);
         }
     }
