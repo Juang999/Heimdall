@@ -94,7 +94,9 @@ class SoController extends Controller
     public function toDay()
     {
         try {
-            $data = SoMaster::where('so_date', Carbon::now()->format('Y-m-d'))
+            $data = DB::table('public.so_mstr')
+                            ->selectRaw('so_code AS code, so_date AS date, so_add_date')
+                            ->where('so_date', Carbon::now()->format('Y-m-d'))
                             ->whereIn('so_oid', function ($query) {
                                 $query->select('sod_so_oid')
                                     ->from('public.sod_det')
@@ -106,8 +108,8 @@ class SoController extends Controller
                                     ->distinct('sod_so_oid')
                                     ->get();
                             })
-                            ->orderBy('so_add_date', 'ASC')
-                            ->paginate(25, ['so_code', 'so_date']);
+                            ->orderBy('so_add_date', 'DESC')
+                            ->paginate(100);
 
             return response()->json([
                 'status' => 'success',

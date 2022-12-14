@@ -94,7 +94,9 @@ class PoController extends Controller
     public function toDay()
     {
         try {
-            $data = PoMaster::where('po_date', Carbon::now()->format('Y-m-d'))
+            $data = DB::table('public.po_mstr')
+                            ->selectRaw('po_code AS code, po_date AS date, po_add_date')
+                            ->where('po_date', Carbon::now()->format('Y-m-d'))
                             ->whereIn('po_oid', function ($query) {
                                 $query->select('pod_po_oid')
                                     ->from('public.pod_det')
@@ -106,7 +108,8 @@ class PoController extends Controller
                                     ->distinct('pod_po_oid')
                                     ->get();
                             })
-                            ->paginate(25, ['po_code', 'po_date']);
+                            ->orderBy('po_add_date', 'DESC')
+                            ->paginate(100);
 
             return response()->json([
                 'status' => 'success',
