@@ -29,16 +29,18 @@ Route::middleware('jwt.verify')->group( function () {
 
     // salesOrderEndPoint
     Route::prefix('SO')->group( function () {
-        Route::get('/{so_code}', 'Api\Client\SoController@show');
+        Route::get('detail/{so_code}', 'Api\Client\SoController@show');
         Route::patch('/', 'Api\Client\SoController@update');
         Route::get('/', 'Api\Client\SoController@history');
+        Route::get('toDay', 'Api\Client\SoController@toDay');
     });
 
     // preOrderEndPoint
     Route::prefix('PO')->group( function () {
-        Route::get('/{po_code}', 'Api\Client\PoController@show');
+        Route::get('detail/{po_code}', 'Api\Client\PoController@show');
         Route::patch('/', 'Api\Client\PoController@update');
         Route::get('/', 'Api\Client\PoController@history');
+        Route::get('toDay','Api\Client\PoController@toDay');
     });
 
     // inventoryReceiptEndPoint
