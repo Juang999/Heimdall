@@ -15,12 +15,14 @@ class SoController extends Controller
     public function show($so_code)
     {
         try {
-        $so_detail = SoMaster::where('so_code', $so_code)->with('SoDDetail.PtMaster')->first([
-            'so_oid',
-            'so_add_by',
-            'so_add_date',
-            'so_code'
-        ]);
+        $so_detail = SoMaster::where('so_code', $so_code)
+                            ->with('SoDDetail.PtMaster')
+                            ->first([
+                                'so_oid',
+                                'so_add_by',
+                                'so_add_date',
+                                'so_code'
+                            ]);
 
             return response()->json([
                 'status' => 'success',
