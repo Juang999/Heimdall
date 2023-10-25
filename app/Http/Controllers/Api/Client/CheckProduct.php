@@ -19,7 +19,8 @@ class CheckProduct extends Controller
     {
         try {
             $product = PtMaster::where('pt_syslog_code', $code)
-                                ->orWhere('pt_code', $code)->first();
+                                ->orWhere('pt_code', $code)
+                                ->first();
 
             if (!$product) {
                 return response()->json([
