@@ -38,8 +38,6 @@ class InventoryReceipt extends Controller
                 $increment += 1;
             }
 
-            dd($increment);
-
             DB::beginTransaction();
                 $riumMaster = RiumMaster::create([
                     'rium_oid' => Str::uuid(),
@@ -61,7 +59,7 @@ class InventoryReceipt extends Controller
                 ]);
 
                 foreach ($request->details as $detail) {
-                    $partnumber = PtMaster::where('pt_code', $request->ptCode)->first();
+                    $partnumber = PtMaster::select('pt_id')->where('pt_code', $request->ptCode)->first();
 
                     $riumMaster->detail = PoDDetail::create([
                         'pod_oid' => Str::uuid(),
