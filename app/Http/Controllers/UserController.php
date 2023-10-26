@@ -42,8 +42,7 @@ class UserController extends Controller
     public function profile()
     {
         try {
-            $user = Auth::user();
-            $user->group = TConfGroup::where('groupid', $user->groupid)->get();
+            $user = User::where('userid', Auth::user()->userid)->with('TConfGroup')->first();
 
             return response()->json([
                 'status' => 'success',
@@ -55,7 +54,7 @@ class UserController extends Controller
                 'status' => 'failed',
                 'message' => 'failed to get profile',
                 'error' => $th->getMessage()
-            ], 400);
+            ], 200);
         }
     }
 }

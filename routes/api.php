@@ -24,7 +24,7 @@ Route::post('login', 'UserController@login');
 Route::middleware('jwt.verify')->group( function () {
     // userEndPoint
     Route::prefix('user')->group( function () {
-        Route::get('profile', 'Api\Client\Profile');
+        Route::get('profile', 'UserController@profile');
     });
 
     // salesOrderEndPoint
