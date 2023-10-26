@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\Api\Client;
 
 use Carbon\Carbon;
-use App\Models\PoMaster;
-use App\Models\PoDDetail;
 use App\Http\Requests\PoRequest;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use App\Models\{PoMaster, PoDDetail, TSqlOut};
+use Illuminate\Support\{Str, Facades\DB, Facades\Auth};
 
 class PoController extends Controller
 {
@@ -43,11 +41,28 @@ class PoController extends Controller
             $products = json_decode($request->products, true);
 
             foreach ($products as $product) {
-                PoDDetail::where('pod_oid', $product["pod_oid"])->update([
-                    'pod_upd_by' => Auth::user()->usernama,
-                    'pod_upd_date' => Carbon::translateTimeString(now()),
-                    'pod_qty_receive' => $product["qtyReceive"],
-                    'pod_loc_id' => $product["locId"]
+                $pod_oid = $product["pod_oid"];
+                $username = Auth::user()->usernama;
+                $timestamp = Carbon::translateTimeString(now());
+                $qty_receive = $product["qtyReceive"];
+                $loc_id = $product["locId"];
+
+                PoDDetail::where('pod_oid', $pod_oid)->update([
+                    'pod_upd_by' => $username,
+                    'pod_upd_date' => $timestamp,
+                    'pod_qty_receive' => $qty_receive,
+                    'pod_loc_id' => $loc_id
+                ]);
+
+                $query = "UPDATE public.pod_det SET pod_upd_by = '$username', pod_upd_date = '$timestamp', pod_qty_receive = $qty_receive, pod_loc_id = $loc_id WHERE pod_oid = '$pod_oid'";
+
+                $data = TSqlOut::create([
+                    'sql_uid' => Str::uuid(),
+                    'seq' => 1,
+                    'sql_command' => $query,
+                    'waktu' => $timestamp,
+                    'mili_second' => 100,
+                    'status_process' => 0
                 ]);
             }
 
