@@ -60,7 +60,4 @@ Route::middleware('jwt.verify')->group( function () {
 
     // checkProductEndPoint
     Route::get('/pt/{code}', 'Api\Client\CheckProduct');
-
-    // searchProductEndPoint
-    Route::post('/searchProduct', 'Api\Client\SearchProduct');
 });
