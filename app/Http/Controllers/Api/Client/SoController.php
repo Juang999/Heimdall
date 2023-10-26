@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Api\Client;
 
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Requests\SoRequest;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Models\{SoMaster, SoDDetail};
+use App\Models\{SoMaster, SoDDetail, TSqlOut};
 
 class SoController extends Controller
 {
@@ -45,10 +46,27 @@ class SoController extends Controller
             $products = json_decode($request->products, true);
 
             foreach ($products as $product) {
-                SoDDetail::where('sod_oid', $product['sod_oid'])->update([
-                    'sod_upd_by' => Auth::user()->usernama,
-                    'sod_upd_date' => Carbon::translateTimeString(now()),
-                    'sod_qty_checked' => $product["qtyChecked"]
+                $username = Auth::user()->usernama;
+                $updated_date = Carbon::translateTimeString(now());
+                $qty_checked = $product["qtyChecked"];
+                $sod_oid = $product['sod_oid'];
+
+                $updateDetailSalesOrder = SoDDetail::where('sod_oid', $sod_oid)->update([
+                    'sod_upd_by' => $username,
+                    'sod_upd_date' => $updated_date,
+                    'sod_qty_checked' => $qty_checked
+                ]);
+
+
+                $query = "UPDATE public.sod_det SET sod_upd_by = '$username', sod_upd_date = '$updated_date', sod_qty_checked = $qty_checked WHERE sod_oid = '$sod_oid'";
+
+                $data = TSqlOut::create([
+                    'sql_uid' => Str::uuid(),
+                    'seq' => 1,
+                    'sql_command' => $query,
+                    'waktu' => $updated_date,
+                    'mili_second' => 100,
+                    'status_process' => 0
                 ]);
             }
             DB::commit();
